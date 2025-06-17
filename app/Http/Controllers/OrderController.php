@@ -58,19 +58,15 @@ class OrderController extends Controller
         $validated = $request->validate([
             'customer_name' => 'required|string|max:255',
             'customer_phone' => 'required|string|max:20',
+            'order_id' => 'required|string|max:100|unique:orders,order_id',
+            'tracking_id' => 'required|string|max:100|unique:orders,tracking_id',
             'order_cost' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:1',
             'sale_amount' => 'nullable|numeric|min:0',
             'order_date' => 'nullable|date',
+            'status' => 'required|string|in:pending,dispatched,delivered,cancelled',
             'notes' => 'nullable|string',
         ]);
-        
-        // Generate unique order ID and tracking ID
-        $validated['order_id'] = $this->generateUniqueOrderId();
-        $validated['tracking_id'] = $this->generateUniqueTrackingId();
-        
-        // Set default status
-        $validated['status'] = 'pending';
         
         // Calculate delivery charge
         $validated['delivery_charge'] = DeliveryCharge::calculateCharge($validated['quantity']);
@@ -120,7 +116,7 @@ class OrderController extends Controller
             'order_cost' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:1',
             'sale_amount' => 'nullable|numeric|min:0',
-            'status' => 'required|in:pending,processing,shipped,delivered,cancelled',
+            'status' => 'required|in:pending,dispatched,delivered,cancelled,returned',
             'notes' => 'nullable|string',
         ]);
         
@@ -129,12 +125,22 @@ class OrderController extends Controller
             $validated['delivery_charge'] = DeliveryCharge::calculateCharge($validated['quantity']);
         }
         
+        // Check if status changed to 'returned'
+        $statusChanged = $order->status !== $validated['status'];
+        
         // Update the order
         $order->update($validated);
         
-        // Recalculate profit if sale amount is provided
-        if (!empty($validated['sale_amount'])) {
-            $order->calculateProfit();
+        // Recalculate profit and net profit if sale amount is provided or status changed to returned
+        if (!empty($validated['sale_amount']) || $statusChanged) {
+            // If there's a sale amount, recalculate both profit and net profit
+            if (!empty($validated['sale_amount'])) {
+                $order->calculateProfit();
+            } 
+            // If just the status changed, recalculate only net profit based on existing profit
+            else if ($statusChanged) {
+                $order->calculateNetProfit();
+            }
             $order->save();
         }
         
@@ -169,39 +175,5 @@ class OrderController extends Controller
         }
         
         return view('track', compact('order'));
-    }
-    
-    /**
-     * Generate a unique order ID
-     *
-     * @return string
-     */
-    private function generateUniqueOrderId()
-    {
-        $orderId = 'ORD-' . strtoupper(Str::random(8));
-        
-        // Check if the generated ID already exists
-        while (Order::where('order_id', $orderId)->exists()) {
-            $orderId = 'ORD-' . strtoupper(Str::random(8));
-        }
-        
-        return $orderId;
-    }
-
-    /**
-     * Generate a unique tracking ID
-     *
-     * @return string
-     */
-    private function generateUniqueTrackingId()
-    {
-        $trackingId = 'TRK-' . strtoupper(Str::random(10));
-        
-        // Check if the generated ID already exists
-        while (Order::where('tracking_id', $trackingId)->exists()) {
-            $trackingId = 'TRK-' . strtoupper(Str::random(10));
-        }
-        
-        return $trackingId;
     }
 }

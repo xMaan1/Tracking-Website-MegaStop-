@@ -120,11 +120,13 @@ class AdSpentController extends Controller
         $totalSales = $query->sum('sale_amount');
         $totalOrderCost = $query->sum('order_cost');
         $totalProfit = $query->sum('profit');
+        $totalNetProfit = $query->sum('net_profit');
         
         return [
             'total_sales' => $totalSales,
             'total_order_cost' => $totalOrderCost,
             'total_profit' => $totalProfit,
+            'total_net_profit' => $totalNetProfit,
         ];
     }
     
@@ -143,8 +145,8 @@ class AdSpentController extends Controller
         // Get sales data
         $salesData = $this->getSalesData([$startDate, $endDate]);
         
-        // Calculate net profit
-        $netProfit = $salesData['total_profit'] - $totalAdSpent;
+        // Calculate net profit (after ad spent)
+        $netProfitAfterAds = $salesData['total_net_profit'] - $totalAdSpent;
         
         // Get monthly data for chart
         $monthlyData = $this->getMonthlyData();
@@ -152,7 +154,7 @@ class AdSpentController extends Controller
         return view('ad-spents.dashboard', compact(
             'totalAdSpent', 
             'salesData', 
-            'netProfit', 
+            'netProfitAfterAds', 
             'monthlyData',
             'startDate',
             'endDate'
@@ -171,7 +173,8 @@ class AdSpentController extends Controller
         $monthlySales = Order::select(
             DB::raw('strftime("%m", order_date) as month'),
             DB::raw('SUM(sale_amount) as total_sales'),
-            DB::raw('SUM(profit) as total_profit')
+            DB::raw('SUM(profit) as total_profit'),
+            DB::raw('SUM(net_profit) as total_net_profit')
         )
         ->whereYear('order_date', $year)
         ->where('status', '!=', 'cancelled')
@@ -199,8 +202,9 @@ class AdSpentController extends Controller
                 'month' => date('F', mktime(0, 0, 0, $i, 1)),
                 'sales' => $monthlySales[$month]['total_sales'] ?? 0,
                 'profit' => $monthlySales[$month]['total_profit'] ?? 0,
+                'net_profit' => $monthlySales[$month]['total_net_profit'] ?? 0,
                 'ad_spent' => $monthlyAdSpent[$month]['total_ad_spent'] ?? 0,
-                'net_profit' => ($monthlySales[$month]['total_profit'] ?? 0) - ($monthlyAdSpent[$month]['total_ad_spent'] ?? 0)
+                'net_profit_after_ads' => ($monthlySales[$month]['total_net_profit'] ?? 0) - ($monthlyAdSpent[$month]['total_ad_spent'] ?? 0)
             ];
         }
         

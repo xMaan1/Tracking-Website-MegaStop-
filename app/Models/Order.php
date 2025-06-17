@@ -23,6 +23,7 @@ class Order extends Model
         'delivery_charge',
         'sale_amount',
         'profit',
+        'net_profit',
         'quantity',
         'status',
         'notes',
@@ -38,6 +39,7 @@ class Order extends Model
         'order_date' => 'date',
         'sale_amount' => 'decimal:2',
         'profit' => 'decimal:2',
+        'net_profit' => 'decimal:2',
     ];
     
     /**
@@ -61,13 +63,36 @@ class Order extends Model
     }
     
     /**
-     * Calculate profit based on sale amount and costs
+     * Calculate profit and net profit based on sale amount and costs
+     * Net profit accounts for delivery charge deduction on returned orders
      */
     public function calculateProfit()
     {
         if ($this->sale_amount) {
+            // Regular profit calculation
             $this->profit = $this->sale_amount - $this->order_cost - $this->delivery_charge;
+            
+            // Net profit calculation - subtract delivery charge again if order is returned
+            $this->net_profit = $this->profit;
+            if ($this->status === 'returned') {
+                $this->net_profit = $this->profit - $this->delivery_charge;
+            }
         }
         return $this->profit;
+    }
+    
+    /**
+     * Calculate net profit separately
+     * This can be called when just the status changes to 'returned'
+     */
+    public function calculateNetProfit()
+    {
+        if ($this->profit) {
+            $this->net_profit = $this->profit;
+            if ($this->status === 'returned') {
+                $this->net_profit = $this->profit - $this->delivery_charge;
+            }
+        }
+        return $this->net_profit;
     }
 }

@@ -1,61 +1,69 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+# MegaStop Order Tracking System
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+A comprehensive order tracking system for e-commerce businesses to track orders, monitor profits, and analyze business performance.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Deployment Instructions for StackCP
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Follow these steps to deploy the MegaStop Tracking Website on StackCP:
 
-## Learning Laravel
+### Pre-deployment Setup
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. **Compile Assets**: Make sure all assets are compiled before deployment
+   ```
+   npm install
+   npm run build
+   ```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+2. **Verify Build Folder**: The `public/build` directory should contain:
+   - `manifest.json`
+   - `assets/` directory with CSS and JS files
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Deployment Steps on StackCP
 
-## Laravel Sponsors
+1. **Upload Files**:
+   - Upload all files to your StackCP hosting account
+   - Make sure the `public` folder is set as your web root
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+2. **Environment Configuration**:
+   - Copy `.env.production` to `.env` on the server
+   - Update the following values in `.env`:
+     - `APP_KEY`: Generate a new key using `php artisan key:generate`
+     - `APP_URL`: Set this to your actual domain
+     - `DB_DATABASE`: Set the absolute path to your SQLite database
 
-### Premium Partners
+3. **Database Setup**:
+   - Create the database directory if it doesn't exist
+   - Make sure the storage directory is writable: `chmod -R 775 storage`
+   - Run migrations: `php artisan migrate`
+   - Seed the database: `php artisan db:seed`
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+4. **File Permissions**:
+   - Set proper permissions:
+     ```
+     chmod -R 775 storage bootstrap/cache
+     chown -R www-data:www-data .
+     ```
 
-## Contributing
+5. **Final Steps**:
+   - Clear cache: `php artisan optimize:clear`
+   - Generate optimized files: `php artisan optimize`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Troubleshooting
 
-## Code of Conduct
+- If you encounter 500 errors, check the logs in `storage/logs/laravel.log`
+- Make sure your SQLite database file has proper permissions
+- If assets are not loading, verify that the asset paths in your `.env` file are correct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Features
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- Order tracking with status updates
+- Financial dashboard with profit analysis
+- Ad spend tracking
+- Support for returned orders
+- Delivery charge calculation
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The MegaStop Order Tracking System is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

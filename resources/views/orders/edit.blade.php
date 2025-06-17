@@ -99,6 +99,7 @@
                                     <option value="dispatched" {{ old('status', $order->status) == 'dispatched' ? 'selected' : '' }}>Dispatched</option>
                                     <option value="delivered" {{ old('status', $order->status) == 'delivered' ? 'selected' : '' }}>Delivered</option>
                                     <option value="cancelled" {{ old('status', $order->status) == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                    <option value="returned" {{ old('status', $order->status) == 'returned' ? 'selected' : '' }}>Returned</option>
                                 </select>
                                 @error('status')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>

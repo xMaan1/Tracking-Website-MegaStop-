@@ -107,20 +107,62 @@
                     </div>
                 </div>
 
-                <!-- Net Profit Card -->
+                <!-- Gross Profit Card -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg fade-in">
                     <div class="p-6 bg-white border-b border-gray-200 hover-lift transition-fast">
                         <div class="flex items-center">
-                            <div class="flex-shrink-0 {{ $netProfit > 0 ? 'bg-green-100' : 'bg-red-100' }} rounded-md p-3">
-                                <svg class="h-8 w-8 {{ $netProfit > 0 ? 'text-green-600' : 'text-red-600' }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <div class="flex-shrink-0 {{ $salesData['total_profit'] > 0 ? 'bg-green-100' : 'bg-red-100' }} rounded-md p-3">
+                                <svg class="h-8 w-8 {{ $salesData['total_profit'] > 0 ? 'text-green-600' : 'text-red-600' }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                                 </svg>
                             </div>
                             <div class="ml-5 w-0 flex-1">
                                 <dl>
-                                    <dt class="text-sm font-medium text-gray-500 truncate">Net Profit</dt>
+                                    <dt class="text-sm font-medium text-gray-500 truncate">Gross Profit</dt>
                                     <dd>
-                                        <div class="text-lg font-medium {{ $netProfit > 0 ? 'text-green-600' : 'text-red-600' }}">₹{{ number_format($netProfit, 2) }}</div>
+                                        <div class="text-lg font-medium {{ $salesData['total_profit'] > 0 ? 'text-green-600' : 'text-red-600' }}">₹{{ number_format($salesData['total_profit'], 2) }}</div>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Net Profit Card (After Returns) -->
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg fade-in">
+                    <div class="p-6 bg-white border-b border-gray-200 hover-lift transition-fast">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 {{ $salesData['total_net_profit'] > 0 ? 'bg-yellow-100' : 'bg-red-100' }} rounded-md p-3">
+                                <svg class="h-8 w-8 {{ $salesData['total_net_profit'] > 0 ? 'text-yellow-600' : 'text-red-600' }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-gray-500 truncate">Net Profit (After Returns)</dt>
+                                    <dd>
+                                        <div class="text-lg font-medium {{ $salesData['total_net_profit'] > 0 ? 'text-yellow-600' : 'text-red-600' }}">₹{{ number_format($salesData['total_net_profit'], 2) }}</div>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Net Profit Card (After Ads) -->
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg fade-in">
+                    <div class="p-6 bg-white border-b border-gray-200 hover-lift transition-fast">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 {{ $netProfitAfterAds > 0 ? 'bg-green-100' : 'bg-red-100' }} rounded-md p-3">
+                                <svg class="h-8 w-8 {{ $netProfitAfterAds > 0 ? 'text-green-600' : 'text-red-600' }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                </svg>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-gray-500 truncate">Final Net Profit</dt>
+                                    <dd>
+                                        <div class="text-lg font-medium {{ $netProfitAfterAds > 0 ? 'text-green-600' : 'text-red-600' }}">₹{{ number_format($netProfitAfterAds, 2) }}</div>
                                     </dd>
                                 </dl>
                             </div>
