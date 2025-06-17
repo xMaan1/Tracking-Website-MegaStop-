@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
 use App\Models\DeliveryCharge;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 
 class OrderController extends Controller
 {
@@ -33,7 +32,10 @@ class OrderController extends Controller
             });
         }
         
-        $orders = $query->latest()->paginate(10);
+        // Sort by created_at in descending order (newest first)
+        $query->latest();
+        
+        $orders = $query->paginate(10);
         
         return view('orders.index', compact('orders'));
     }
@@ -43,7 +45,9 @@ class OrderController extends Controller
      */
     public function create()
     {
-        return view('orders.create');
+        $deliveryCharges = DeliveryCharge::where('is_active', true)->get();
+        $today = now()->format('Y-m-d');
+        return view('orders.create', compact('deliveryCharges', 'today'));
     }
 
     /**
@@ -56,30 +60,36 @@ class OrderController extends Controller
             'customer_phone' => 'required|string|max:20',
             'order_cost' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:1',
+            'sale_amount' => 'nullable|numeric|min:0',
+            'order_date' => 'nullable|date',
             'notes' => 'nullable|string',
         ]);
         
         // Generate unique order ID and tracking ID
-        $orderId = 'ORD-' . strtoupper(Str::random(8));
-        $trackingId = 'TRK-' . strtoupper(Str::random(10));
+        $validated['order_id'] = $this->generateUniqueOrderId();
+        $validated['tracking_id'] = $this->generateUniqueTrackingId();
         
-        // Calculate delivery charge based on quantity
-        $deliveryCharge = DeliveryCharge::calculateCharge($validated['quantity']);
+        // Set default status
+        $validated['status'] = 'pending';
+        
+        // Calculate delivery charge
+        $validated['delivery_charge'] = DeliveryCharge::calculateCharge($validated['quantity']);
+        
+        // Set order date to today if not provided
+        if (empty($validated['order_date'])) {
+            $validated['order_date'] = now()->format('Y-m-d');
+        }
         
         // Create the order
-        $order = Order::create([
-            'customer_name' => $validated['customer_name'],
-            'customer_phone' => $validated['customer_phone'],
-            'order_id' => $orderId,
-            'tracking_id' => $trackingId,
-            'order_cost' => $validated['order_cost'],
-            'delivery_charge' => $deliveryCharge,
-            'quantity' => $validated['quantity'],
-            'status' => 'pending',
-            'notes' => $validated['notes'],
-        ]);
+        $order = Order::create($validated);
         
-        return redirect()->route('orders.show', $order)
+        // Calculate profit if sale amount is provided
+        if (!empty($validated['sale_amount'])) {
+            $order->calculateProfit();
+            $order->save();
+        }
+        
+        return redirect()->route('orders.index')
             ->with('success', 'Order created successfully!');
     }
 
@@ -109,7 +119,8 @@ class OrderController extends Controller
             'customer_phone' => 'required|string|max:20',
             'order_cost' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:1',
-            'status' => ['required', Rule::in(['pending', 'dispatched', 'delivered', 'cancelled'])],
+            'sale_amount' => 'nullable|numeric|min:0',
+            'status' => 'required|in:pending,processing,shipped,delivered,cancelled',
             'notes' => 'nullable|string',
         ]);
         
@@ -118,7 +129,14 @@ class OrderController extends Controller
             $validated['delivery_charge'] = DeliveryCharge::calculateCharge($validated['quantity']);
         }
         
+        // Update the order
         $order->update($validated);
+        
+        // Recalculate profit if sale amount is provided
+        if (!empty($validated['sale_amount'])) {
+            $order->calculateProfit();
+            $order->save();
+        }
         
         return redirect()->route('orders.show', $order)
             ->with('success', 'Order updated successfully!');
@@ -140,17 +158,50 @@ class OrderController extends Controller
      */
     public function track(Request $request)
     {
-        if (!$request->has('tracking_id')) {
-            return view('track');
-        }
+        $validated = $request->validate([
+            'tracking_id' => 'required|string',
+        ]);
         
-        $trackingId = $request->tracking_id;
-        $order = Order::where('tracking_id', $trackingId)->first();
+        $order = Order::where('tracking_id', $validated['tracking_id'])->first();
         
         if (!$order) {
-            return view('track')->with('error', 'No order found with this tracking ID.');
+            return back()->with('error', 'Order not found with the provided tracking ID.');
         }
         
         return view('track', compact('order'));
+    }
+    
+    /**
+     * Generate a unique order ID
+     *
+     * @return string
+     */
+    private function generateUniqueOrderId()
+    {
+        $orderId = 'ORD-' . strtoupper(Str::random(8));
+        
+        // Check if the generated ID already exists
+        while (Order::where('order_id', $orderId)->exists()) {
+            $orderId = 'ORD-' . strtoupper(Str::random(8));
+        }
+        
+        return $orderId;
+    }
+
+    /**
+     * Generate a unique tracking ID
+     *
+     * @return string
+     */
+    private function generateUniqueTrackingId()
+    {
+        $trackingId = 'TRK-' . strtoupper(Str::random(10));
+        
+        // Check if the generated ID already exists
+        while (Order::where('tracking_id', $trackingId)->exists()) {
+            $trackingId = 'TRK-' . strtoupper(Str::random(10));
+        }
+        
+        return $trackingId;
     }
 }

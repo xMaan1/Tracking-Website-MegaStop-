@@ -1,0 +1,138 @@
+/* Custom theme colors and styling */
+:root {
+    --primary-color: #3b82f6;
+    --primary-hover: #2563eb;
+    --secondary-color: #10b981;
+    --secondary-hover: #059669;
+    --accent-color: #8b5cf6;
+    --accent-hover: #7c3aed;
+    --danger-color: #ef4444;
+    --danger-hover: #dc2626;
+    --warning-color: #f59e0b;
+    --warning-hover: #d97706;
+    --success-color: #22c55e;
+    --success-hover: #16a34a;
+    --background-light: #f9fafb;
+    --text-primary: #1f2937;
+    --text-secondary: #4b5563;
+    --text-light: #9ca3af;
+}
+
+/* Better card styling */
+.app-card {
+    @apply bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+}
+
+.app-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+}
+
+/* Button styles */
+.btn-primary {
+    @apply px-4 py-2 bg-blue-600 text-white rounded-lg transition-all hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none;
+}
+
+.btn-secondary {
+    @apply px-4 py-2 bg-emerald-600 text-white rounded-lg transition-all hover:bg-emerald-700 focus:ring-4 focus:ring-emerald-300 focus:outline-none;
+}
+
+.btn-danger {
+    @apply px-4 py-2 bg-red-600 text-white rounded-lg transition-all hover:bg-red-700 focus:ring-4 focus:ring-red-300 focus:outline-none;
+}
+
+.btn-outline {
+    @apply px-4 py-2 bg-white text-gray-800 border border-gray-300 rounded-lg transition-all hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 focus:outline-none;
+}
+
+/* Dashboard cards */
+.dashboard-stat-card {
+    @apply p-6 rounded-xl shadow-md transition-all duration-300;
+    background: linear-gradient(135deg, var(--background-light) 0%, white 100%);
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.dashboard-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+}
+
+/* Tables */
+.app-table {
+    @apply min-w-full bg-white;
+}
+
+.app-table thead th {
+    @apply px-6 py-4 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.app-table tbody tr {
+    @apply hover:bg-gray-50 transition-colors;
+}
+
+.app-table tbody td {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+/* Form controls */
+.form-input {
+    @apply mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50;
+}
+
+.form-select {
+    @apply mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50;
+}
+
+.form-checkbox {
+    @apply rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50;
+}
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.slide-in {
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Improved layout spacing */
+.content-wrapper {
+    @apply py-8 px-4 sm:px-6 lg:px-8;
+}
+
+.section-header {
+    @apply mb-6 border-b pb-2 text-2xl font-semibold text-gray-800;
+}
+
+/* Responsive fixes */
+.mobile-padding {
+    @apply px-4 sm:px-0;
+}
+
+/* Navigation improvements */
+.nav-link {
+    @apply px-3 py-2 flex items-center text-sm font-medium rounded-md transition-colors;
+}
+
+.nav-link.active {
+    @apply bg-blue-50 text-blue-700;
+}
+
+.nav-link:hover {
+    @apply bg-gray-50 text-gray-900;
+}

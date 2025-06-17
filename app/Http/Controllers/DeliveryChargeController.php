@@ -12,7 +12,7 @@ class DeliveryChargeController extends Controller
      */
     public function index()
     {
-        $deliveryCharges = DeliveryCharge::orderBy('min_quantity')->get();
+        $deliveryCharges = DeliveryCharge::orderBy('min_quantity')->paginate(10);
         return view('delivery-charges.index', compact('deliveryCharges'));
     }
 
@@ -110,8 +110,9 @@ class DeliveryChargeController extends Controller
         $charge = DeliveryCharge::calculateCharge($quantity);
         
         return response()->json([
+            'success' => true,
             'quantity' => $quantity,
-            'charge' => $charge,
+            'delivery_charge' => $charge,
             'formatted_charge' => number_format($charge, 2),
         ]);
     }

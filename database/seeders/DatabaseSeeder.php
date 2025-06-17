@@ -20,9 +20,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
         
-        // Run the delivery charge seeder
+        // Run the seeders
         $this->call([
             DeliveryChargeSeeder::class,
+            AdSpentSeeder::class,
         ]);
     }
 }

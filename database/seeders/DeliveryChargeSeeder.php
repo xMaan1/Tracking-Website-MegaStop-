@@ -20,30 +20,44 @@ class DeliveryChargeSeeder extends Seeder
         $deliveryCharges = [
             [
                 'min_quantity' => 1,
-                'max_quantity' => 5,
+                'max_quantity' => 1,
                 'charge' => 250.00,
                 'is_multiplier' => false,
                 'is_active' => true,
             ],
             [
+                'min_quantity' => 2,
+                'max_quantity' => 2,
+                'charge' => 270.00,
+                'is_multiplier' => false,
+                'is_active' => true,
+            ],
+            [
+                'min_quantity' => 3,
+                'max_quantity' => 3,
+                'charge' => 280.00,
+                'is_multiplier' => false,
+                'is_active' => true,
+            ],
+            [
+                'min_quantity' => 4,
+                'max_quantity' => 5,
+                'charge' => 300.00,
+                'is_multiplier' => false,
+                'is_active' => true,
+            ],
+            [
                 'min_quantity' => 6,
-                'max_quantity' => 10,
-                'charge' => 200.00,
+                'max_quantity' => 7,
+                'charge' => 350.00,
                 'is_multiplier' => false,
                 'is_active' => true,
             ],
             [
-                'min_quantity' => 11,
-                'max_quantity' => 20,
-                'charge' => 150.00,
-                'is_multiplier' => false,
-                'is_active' => true,
-            ],
-            [
-                'min_quantity' => 21,
+                'min_quantity' => 8,
                 'max_quantity' => null, // No upper limit
-                'charge' => 100.00,
-                'is_multiplier' => false,
+                'charge' => 50.00,
+                'is_multiplier' => true,
                 'is_active' => true,
             ],
         ];

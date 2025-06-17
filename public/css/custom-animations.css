@@ -1,0 +1,151 @@
+/* Custom Animations for MegaStop Admin Dashboard */
+
+/* Base transitions for all interactive elements */
+.transition-fast {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hover effects for buttons */
+.hover-lift {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Card animations */
+.card-enter {
+    animation: card-in 0.3s ease-out forwards;
+}
+
+@keyframes card-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Status badge pulse for pending items */
+.status-pulse {
+    animation: status-pulse 2s infinite;
+}
+
+@keyframes status-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(237, 137, 54, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 5px rgba(237, 137, 54, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(237, 137, 54, 0);
+    }
+}
+
+/* Form input focus animation */
+.input-focus-effect {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-focus-effect:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+}
+
+/* Table row hover effect */
+.table-row-hover {
+    transition: background-color 0.15s ease;
+}
+
+.table-row-hover:hover {
+    background-color: rgba(243, 244, 246, 0.7);
+}
+
+/* Fade in animation for alerts and notifications */
+.fade-in {
+    animation: fade-in 0.3s ease-out forwards;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Subtle scale animation for dashboard cards */
+.scale-hover {
+    transition: transform 0.2s ease;
+}
+
+.scale-hover:hover {
+    transform: scale(1.02);
+}
+
+/* Loading spinner animation */
+.spinner {
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Success checkmark animation */
+.checkmark {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: dash 1s ease-in-out forwards;
+}
+
+@keyframes dash {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Slide in from right animation */
+.slide-in-right {
+    animation: slide-in-right 0.3s ease-out forwards;
+}
+
+@keyframes slide-in-right {
+    from {
+        transform: translateX(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Staggered animation for list items */
+.stagger-item {
+    opacity: 0;
+    animation: fade-in 0.3s ease-out forwards;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0.05s; }
+.stagger-item:nth-child(2) { animation-delay: 0.1s; }
+.stagger-item:nth-child(3) { animation-delay: 0.15s; }
+.stagger-item:nth-child(4) { animation-delay: 0.2s; }
+.stagger-item:nth-child(5) { animation-delay: 0.25s; }
+.stagger-item:nth-child(6) { animation-delay: 0.3s; }
+.stagger-item:nth-child(7) { animation-delay: 0.35s; }
+.stagger-item:nth-child(8) { animation-delay: 0.4s; }
+.stagger-item:nth-child(9) { animation-delay: 0.45s; }
+.stagger-item:nth-child(10) { animation-delay: 0.5s; }
